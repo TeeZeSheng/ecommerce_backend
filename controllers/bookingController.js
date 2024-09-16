@@ -2,7 +2,6 @@ const Product = require('../models/Product');
 const User = require('../models/User');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const Tour = require('./../models/Tour');
 const Stripe = require('stripe')
 const Cart = require("../models/Cart");
 const mongoose = require('mongoose')
@@ -11,11 +10,10 @@ const dotenv = require('dotenv');
 dotenv.config({path: './config.env'});
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-console.log(process.env.STRIPE_SECRET_KEY)
+
 
 exports.getCheckoutSession =  catchAsync(async (req, res, next) => {
     
-    const tour = await Tour.findById(req.params.tourId);
     const priceId = req.params.priceId;
     
     const cart = await Cart.aggregate([
