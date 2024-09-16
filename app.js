@@ -21,8 +21,8 @@ const userRoute = require('./route/userRoute');
 // const mealRoute = require('./route/mealRoute')
 // const exerciseRoute = require('./route/exerciseRoute')
 const bookingRoute = require('./route/bookingRoute')
-const tourRoute = require('./route/tourRoute');
-const reviewRoute = require('./route/reviewRoute');
+// const tourRoute = require('./route/tourRoute');
+// const reviewRoute = require('./route/reviewRoute');
 const AppError = require('./utils/appError');
 const errorHandler = require('./controllers/errorController');
 const productRoute = require('./route/productRoute')
@@ -110,7 +110,7 @@ app.use('/api/v1/users', userRoute);
 // app.use('/api/v1/meal', mealRoute);
 // app.use('/api/v1/exercise', exerciseRoute);
 app.use('/api/v1/booking', bookingRoute);
-app.use('/api/v1/tours', tourRoute);
+
 app.use('/api/v1/product', productRoute)
 // app.use('/api/v1/reviews', reviewRoute);
 app.use('/api/v1/cart', cartRoute)
