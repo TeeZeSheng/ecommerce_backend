@@ -69,7 +69,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 
 app.use(cors({
-    origin: 'http://localhost:3000',  // Replace with your Next.js frontend URL
+    origin: true,  // Replace with your Next.js frontend URL
     credentials: true  // Allows cookies to be sent
   }));
 
