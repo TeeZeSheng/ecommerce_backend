@@ -110,7 +110,7 @@ app.use('/api/v1/users', userRoute);
 // app.use('/api/v1/meal', mealRoute);
 // app.use('/api/v1/exercise', exerciseRoute);
 app.use('/api/v1/booking', bookingRoute);
-app.use('/api/v1/tours', tourRoute);
+
 app.use('/api/v1/product', productRoute)
 // app.use('/api/v1/reviews', reviewRoute);
 app.use('/api/v1/cart', cartRoute)
