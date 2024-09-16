@@ -57,35 +57,14 @@ const userSchema = mongoose.Schema({
         default: true,
         select: false,
     },
-    workout: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Workout'
-        }
-
-    ],
-    customWorkout: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Workout'
-        }
-    ],
-    mealPlan: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'MealPlan'
-        }
-    ],
-    goal: {
-        type: String,
-        // required: [true, 'fitness goal cannot be empty'],
-        
+    cart: {
+        type:[Object]
     },
-    level: {
-        type: String,
-        // required: [true, 'fitness level cannot be empty'],
-        
+    wishList: {
+        type: [mongoose.Schema.ObjectId],
+        ref: "WishList"
     }
+
 })
 
 userSchema.pre('save', async function(next) {
@@ -111,13 +90,13 @@ userSchema.pre(/^find/, function(next) {
     next();
 })
 
-userSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: 'workout',
-    })
+// userSchema.pre(/^find/, function(next) {
+//     this.populate({
+//         path: 'workout',
+//     })
 
-    next();
-})
+//     next();
+// })
 
 userSchema.methods.correctPassword = function(candidatePassword, userPassword) {
     return bcrypt.compare(candidatePassword, userPassword);

@@ -4,9 +4,10 @@ const mongoose = require('mongoose');
 
 dotenv.config({path: './config.env'});
 
-const PORT = process.env.PORT || 3000;
+const PORT = 8080;
 
 const DB = process.env.DATABASE.replace('<password>', process.env.DATABASE_PASSWORD);
+
 
 
 app.listen(PORT, () => {

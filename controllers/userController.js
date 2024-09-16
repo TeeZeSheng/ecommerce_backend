@@ -1,5 +1,5 @@
 const User = require("../models/User")
-const Progress = require("../models/Progress")
+// const Progress = require("../models/Progress")
 const AppError = require("../utils/appError")
 const catchAsync = require("../utils/catchAsync")
 const multer = require('multer');
@@ -63,38 +63,38 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.createUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'route not yet defiend",'
-    })
-}
+// exports.createUser = (req, res) => {
+//     res.status(500).json({
+//         status: 'error',
+//         message: 'route not yet defiend",'
+//     })
+// }
 
-exports.getUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'route not yet defiend",'
-    })
-}
+// exports.getUser = (req, res) => {
+//     res.status(500).json({
+//         status: 'error',
+//         message: 'route not yet defiend",'
+//     })
+// }
 
-exports.updateUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'route not yet defiend",'
-    })
-}
+// exports.updateUser = (req, res) => {
+//     res.status(500).json({
+//         status: 'error',
+//         message: 'route not yet defiend",'
+//     })
+// }
 
-exports.deleteUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'route not yet defiend",'
-    })
-}
+// exports.deleteUser = (req, res) => {
+//     res.status(500).json({
+//         status: 'error',
+//         message: 'route not yet defiend",'
+//     })
+// }
 
-exports.getMe = (req, res, next) => {
-    req.params.id = req.user.id;
-    next();
-}
+// exports.getMe = (req, res, next) => {
+//     req.params.id = req.user.id;
+//     next();
+// }
 
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
@@ -130,6 +130,7 @@ exports.setPreference = catchAsync( async (req, res, next) => {
     if(!user) {
         return next(new AppError('user not found', 400));
     }
+
 
     res.status(200).json({
         status: 'success',
@@ -191,12 +192,12 @@ exports.getProgress = catchAsync( async (req, res, next) => {
 })
 
 exports.getOneUser = catchAsync(async (req, res, next) => {
-    const user = await User.findById(req.params.id)
+    const user_id = req.session.user_id
+    console.log("in getOneUser")
+    console.log(user_id)
 
     res.status(200).json({
         status: 'sucess',
-        data: {
-            user
-        }
+        data: user_id
     })
 })

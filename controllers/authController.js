@@ -20,9 +20,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
         passwordChangedAt: req.body.passwordChangedAt,
-        role: req.body.role,
-        level: req.body.level,
-        goal: req.body.goal,
+
     });
     // const url = 0;
     // await new Email(newUser, url).sendWelcome();
@@ -41,6 +39,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 })
 
 exports.signin = catchAsync( async (req, res, next) => {
+    console.log(req.headers)
     let email = req.body.email;
     let password = req.body.password;
 
@@ -53,47 +52,63 @@ exports.signin = catchAsync( async (req, res, next) => {
         return next(new AppError("Invalid Credentials", 401));
     }
     
+    
+    
+    
     const token = signToken(user._id);
+
+    
+    req.session.user_id = user._id
+    req.session.authenticated = true
+    req.session.testing = 'test'
+
+    console.log(req.ip)
+
     res.status(200).json({
         status: "success",
         token,
         user: user
     })
+    
+    
 
 })
 
 exports.protect = catchAsync( async (req, res, next) => {
-    let token;
-    console.log(req.headers)
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
-    }
+    // let token;
+    // console.log(req.headers)
+    // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    //     token = req.headers.authorization.split(' ')[1];
+    // }
 
-    if(!token) {
-        return next( new AppError("Please log in", 401));
-    }
+    // if(!token) {
+    //     return next( new AppError("Please log in", 401));
+    // }
 
-    //verify token
-    //using promisify will retunr a promise
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    console.log(decoded)
+    // //verify token
+    // //using promisify will retunr a promise
+    // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    // console.log(decoded)
 
-    //check if user exists
-    const freshUser = await User.findById(decoded.id);
-    console.log(freshUser);
+    // //check if user exists
+    // const freshUser = await User.findById(decoded.id);
+    // console.log(freshUser);
 
-    if(!freshUser) {
-        return next( new AppError( 'User does not exists', 401 ) );
-    }
+    // if(!freshUser) {
+    //     return next( new AppError( 'User does not exists', 401 ) );
+    // }
 
-    //checks if user changed their password
-    if (freshUser.changedPassword(decoded.iat)) {
-        return next( new AppError( 'User password changed before', 401 ) );
-    }
+    // //checks if user changed their password
+    // if (freshUser.changedPassword(decoded.iat)) {
+    //     return next( new AppError( 'User password changed before', 401 ) );
+    // }
     
 
-    req.user = freshUser;
-    // req.token = token;
+    // req.user = freshUser;
+    // // req.token = token;
+    if (!req.session.user_id) {
+        return next( new AppError( 'Please Log In', 401 ) );
+    }
     next();
 })
 
