@@ -29,23 +29,28 @@ exports.getWishListItem = catchAsync( async (req, res, next) => {
 })
 
 exports.deleteWishlistItem = catchAsync(async (req, res, next) => {
-    const wishList = await WishList.findOneAndDelete({
+    const wl = await WishList.findOneAndDelete({
         user_id: req.params.id,
         name: req.body.name,
         color: req.body.color
     })
-    console.log(req.params.id)
-    console.log(wishList)
 
     const user = await User.findOneAndUpdate(
         {_id: req.params.id},
-        {$pull: {wishList: wishList._id}},
+        {$pull: {wishList: wl._id}},
         {new: true}
     )
+
+    const wishList = await WishList.aggregate([
+        {
+            $match: {user_id: new mongoose.Types.ObjectId(req.params.id)}
+        }
+    ])
     
-    res.status(204).json({
+    res.status(200).json({
         status: 'success',
         message: 'wishList deleted',
+        wishList
     })
     
 })
