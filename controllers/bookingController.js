@@ -56,9 +56,8 @@ exports.getCheckoutSession =  catchAsync(async (req, res, next) => {
     // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
     // the actual Session ID is returned in the query parameter when your customer
     // is redirected to the success page.
-    return_url: `http://localhost:8080/return?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `https://e-commerce-xn95.vercel.app/purchase-complete`,
     });
-
     
     res.send({clientSecret: session.client_secret});
 })

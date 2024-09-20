@@ -1,4 +1,5 @@
 const Cart = require("../models/Cart");
+const User = require("../models/User")
 const catchAsync = require("../utils/catchAsync");
 const mongoose = require("mongoose")
 
@@ -31,6 +32,7 @@ exports.getCartItem = catchAsync(async (req, res, next) => {
                 price: { $multiply: ["$productDetails.price", "$count"] },
                 name: "$productDetails.name",
                 product_type: "$productDetails.product_type",
+                price_id: "$productDetails.price_id",
                 date: "$latest_date"
             }
         },
@@ -47,7 +49,8 @@ exports.getCartItem = catchAsync(async (req, res, next) => {
                         price: "$price",
                         name: "$name",
                         product_type: "$product_type",
-                        date: "$date"
+                        date: "$date",
+                        price_id: "$price_id"
                         
                     }
                 },
@@ -100,6 +103,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
 
     req.body.line_items = cart
 
+    
     next();
 
     // res.status(200).json({
@@ -107,4 +111,55 @@ exports.getCart = catchAsync(async (req, res, next) => {
     //     cart
     // })
 
+})
+
+exports.updateQuantity = catchAsync( async (req, res, next) => {
+    console.log(req.body)
+    let cart
+    if (req.body.operator > 0) {
+        cart = await Cart.create({
+            product_id: new mongoose.Types.ObjectId(req.body.product_id),
+            product_name: req.body.name + " (" + req.body.color + ")",
+            size: req.body.size,
+            color: req.body.color,
+            user_id: new mongoose.Types.ObjectId(req.body.id),
+            price_id: req.body.price_id,
+            display_image: req.body.display_image,
+            date: req.body.date
+        })
+        const user  = await User.findByIdAndUpdate("66df144bfb6717ad92a34ef2",{ $push: { cart: req.body } },  // Add to the cartitem array
+            { new: true, useFindAndModify: false }) // Return the updated document and avoid deprecated options;
+    } else if (req.body.operator < 0) {
+        cart = await Cart.findOneAndDelete({ 
+            product_id: req.body.product_id, 
+            user_id: req.body.id, 
+            color: req.body.color, 
+            size: req.body.size 
+        })
+        console.log(cart)
+        // const user = await User.findOneAndUpdate(
+        //     {_id: req.params.id},
+        //     { $pull: }
+        // )
+    }
+
+    
+    next()
+})
+
+exports.purchaseComplete = catchAsync( async (req, res, next) => {
+    const cart = await Cart.deleteMany({ user_id: req.params.id })
+
+    const user = await User.findByIdAndUpdate(
+        req.params.id,         // Find the document by user_id
+        { cart: []}        // Set the cart array to an empty array
+      );
+    
+    
+
+    res.status(200).json({
+        status: 'success',
+        cart,
+        user
+    })
 })

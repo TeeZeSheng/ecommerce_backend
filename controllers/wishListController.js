@@ -27,3 +27,25 @@ exports.getWishListItem = catchAsync( async (req, res, next) => {
         wishList
     })
 })
+
+exports.deleteWishlistItem = catchAsync(async (req, res, next) => {
+    const wishList = await WishList.findOneAndDelete({
+        user_id: req.params.id,
+        name: req.body.name,
+        color: req.body.color
+    })
+    console.log(req.params.id)
+    console.log(wishList)
+
+    const user = await User.findOneAndUpdate(
+        {_id: req.params.id},
+        {$pull: {wishList: wishList._id}},
+        {new: true}
+    )
+    
+    res.status(204).json({
+        status: 'success',
+        message: 'wishList deleted',
+    })
+    
+})

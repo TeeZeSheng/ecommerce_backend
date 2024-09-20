@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/addToWishList', wishListController.addToWishList )
 router.get('/getWishList/:id', wishListController.getWishListItem)
+router.post('/deleteWishlist/:id', wishListController.deleteWishlistItem)
 
 module.exports = router
 
